@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>WeWatch</title>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+		<meta http-equiv="x-ua-compatible" content="IE=edge" />
+
+		<meta property="og:url"                content="https://wewatch.com" />
+		<meta property="og:type"               content="website" />
+		<meta property="og:title"              content="Check out our videos!" />
+		<meta property="og:description"        content="Videos powered by WeWatch" />
+		<meta property="og:image"              content="https://wewatch.com/logo.png" />
+		<meta property="fb:app_id"             content="1301206253263" />
+
+		<meta name="twitter:card" content="summary_large_image">
+		<meta name="twitter:site" content="@wewatch">
+		<meta name="twitter:creator" content="@wewatch">
+		<meta name="twitter:title" content="Check out this video from WeWatch!">
+		<meta name="twitter:description" content="Videos powered by WeWatch">
+		<meta name="twitter:image" content="https://wewatch.com/logo.png">
+		<meta name="robots" content="noindex">
+
+		<link rel="shortcut icon" href="./favicon.ico">
+		<link href="./main.css" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+	</head>
+	<body>
+		<div id="user-menu">
+			<div id="main">
+				<div id="header">
+					<h2>WeWatch</h2>
+				</div>
+				<div id="login-form">
+			                <div id="user-fields">
+			                        <div class="email-field">
+			                                <p>E-mail</p>
+			                                <input type="text" class="textbox" id="user-email" name="user-email" placeholder="User Email" autofocus="true"/>
+			                        </div>
+			                        <div class="password-field">
+			                                <p>Password</p>
+			                                <input type="password" class="textbox" id="password" name="password" placeholder="Password"/>
+			                        </div>
+			                        <p id="login-result"></p>
+			                </div>	
+				</div>
+				<div id="video-list" style="display: none;">
+			                        <h3>Your Videos</h3>
+			                        <p style="font-size: 10px; margin-bottom: 0px;">Select a video's thumbnail to copy url to clipboard</p>
+						<br/>
+					<div id="expanding-list-div">
+						<ul class="expanding-list" id="expanding-list-top"></ul>
+					</div>
+				<br/>
+				</div>
+				<div id="footer">
+					<p>&copy; Copyright 2020 <a href="https://wewatch.com" id="site-link">WeWatch</a></p>
+				</div>
+			</div>
+		</div>
+
+		<script>
+
+		var user_email = "";
+		var password = "";
+
+		function tryLogin (){
+			user_email = document.getElementById("user-email").value;
+			password = document.getElementById("password").value;
+			console.log(user_email + " " + password);
+			clearTimeout(formIdleTimer);
+			if ( user_email != "" && password != "") {
+				formIdleTimer = setTimeout(function(){
+					populateMenu();		
+				},1000);
+			}
+		}
+
+		$("#user-email").on('input',(function(){
+			tryLogin();
+		}));
+
+		$("#password").on('input',(function(){
+			tryLogin();
+		}));
+
+		$(".thumbnail-container").click(function() {
+			$(".thumbnail-container").removeClass("selected-thumbnail");
+			$(this).addClass("selected-thumbnail");
+			copyToClipboard(this);
+		});
+
+		function copyToClipboard(val){
+			if ( $(val).attr("id") === "video-item" ){
+				var videoLabel = document.getElementById("video-item").innerHTML;
+				var videoURL = "https://videos.wewatch.com/?video=" + videoLabel;
+				navigator.clipboard.writeText(videoURL);
+			}
+		}
+
+		function newMenuLevel (labelID, label){
+			let splitLabel = label.split('-');
+			for (let i = 0; i < splitLabel.length; i++){
+				splitLabel[i] = splitLabel[i].charAt(0).toUpperCase() + splitLabel[i].slice(1);
+			}
+			label = splitLabel.join(' ');
+			var newLi = document.createElement('li');
+			var newP = document.createElement('p');
+			$(newLi).attr("id",labelID);
+			if ( labelType == "menu-item" ){
+				$(newLi).addClass("menu-item");
+			} else {
+				$(newLi).addClass("video-item");
+			}
+			newP.innerHTML = label; 
+			$(newLi).append(newP);
+			return newLi;
+		}
+
+		function newVideoItem (labelID, label, videoPath){
+			let splitLabel = label.split('-');
+			for (let i = 0; i < splitLabel.length; i++){
+				splitLabel[i] = splitLabel[i].charAt(0).toUpperCase() + splitLabel[i].slice(1);
+			}
+			label = splitLabel.join(' ');
+			var new_list_div = document.createElement('div');
+			$(new_list_div).attr("class","thumbnail-container");
+			$(new_list_div).attr("id",videoPath);
+			var new_list_label = document.createElement('p');
+			$(new_list_label).attr("class","thumbnail-label");
+			new_list_label.id = label;
+			new_list_label.innerHTML = label;
+			var new_list_img = document.createElement('img');
+			$.ajax({
+			    url:"https://videos.wewatch.com/" + videoPath + "/thumbnail.png",
+			    type:'HEAD',
+			    success: function()
+			    {
+				new_list_img.src = "https://videos.wewatch.com/" + videoPath + "/thumbnail.png";
+			    }
+			});
+			$(new_list_img).attr("class","thumbnail");
+			$(new_list_img).attr("onerror","if (this.src != 'error.jpg') this.src = 'error.jpg'");
+			$(new_list_div).append(new_list_img);
+			$(new_list_div).append(new_list_label);
+
+			return new_list_div;
+		}
+
+		function populateMenu(){
+			$.ajax({
+	                        url:'password-check',
+	                        type:'get',
+	                        data:{user_email:user_email, password:password},
+	                        success:function(response){
+	                            $("#expanding-list").empty();
+				    let jResponse = JSON.parse(response);
+				    let videos_list = jResponse["video_list"].split(',');
+				    let maxLevels = 0;
+				    let nLevels = 0;
+				    for ( var i in videos_list ){
+					let vid = videos_list[i];
+					nLevels = vid.match(/\//g).length;
+					cl(nLevels);
+					if ( nLevels > maxLevels ) {
+						maxLevels = nLevels;
+					}
+				    }
+				maxLevels++;
+				nLevels = maxLevels;
+
+				let levelLabels = {};
+				for ( var i = 0; i < nLevels; i++){
+					for ( var j in videos_list ) {
+						let vid = videos_list[j];
+						let segs = vid.split('/');
+						let nSegs = segs.length;
+						let seg = segs[i];
+						let itemType = (nSegs-1) == i ? "video-item" : "menu-item";
+						if ( levelLabels[i] === undefined ) { 
+							levelLabels[i] = {}; 
+						}
+						if ( levelLabels[i][segs.slice(0,i+1).join('-')] === undefined ) { 
+							levelLabels[i][segs.slice(0,i+1).join('-')] = {}; 
+							if ( i == 0) {	
+								$("#expanding-list-top").append(newMenuLevel(seg,seg,itemType));
+							} else {
+								if ( $("#" + segs.slice(0,i).join('-') + " ul").length == 0){
+									let newUl = document.createElement('ul');
+									$(newUl).addClass("expanding-list");
+									$("#" + segs.slice(0,i).join('-')).append(newUl);
+								}
+								if (itemType == "menu-item"){
+									$("#" + segs.slice(0,i).join('-') + " ul").append(newMenuLevel(segs.slice(0,i+1).join('-'),segs[i],itemType));
+								} else {
+									
+									$("#" + segs.slice(0,i).join('-') + " ul").append(newVideoItem(segs.slice(0,i+1).join('-'),segs[i],itemType,vid));
+								}
+							}
+						}
+					}
+				}
+
+			$(".expanding-list > li > p").click(function(){
+					var ulItem = $(this).siblings("ul")[0];
+					let visible = ulItem.classList.contains("visible") ? true : false;
+					if (visible == true){
+						$(ulItem).removeClass("visible");
+						$(ulItem).css("display","none");
+					} else{
+						$(ulItem).addClass("visible");
+						$(ulItem).css("display","block");
+					};
+			});
+
+			$(".expanding-list").children("li").children("ul").css("display","none");
+			$("#expanding-list-top").children().css("display","block");
+
+			$("#login-form").css("display","none");
+			$("#login-form").children().css("display","none");
+		
+			$("#video-list").css("display","block");
+			$("#video-list").children().css("display","block");
+
+	                        }
+                    	});
+		}
+
+		</script>
+</html>
+

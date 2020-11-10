@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>WeWatch Video</title>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+		<meta http-equiv="x-ua-compatible" content="IE=edge" />
+
+		<meta property="og:url"                content="https://wewatch.com" />
+		<meta property="og:type"               content="website" />
+		<meta property="og:title"              content="Check out our videos!" />
+		<meta property="og:description"        content="Videos powered by WeWatch" />
+		<meta property="og:image"              content="https://wewatch.com/logo.png" />
+		<meta property="fb:app_id"             content="1301206253263" />
+
+		<meta name="twitter:card" content="summary_large_image">
+		<meta name="twitter:site" content="@wewatch">
+		<meta name="twitter:creator" content="@wewatch">
+		<meta name="twitter:title" content="Check out this video from WeWatch!">
+		<meta name="twitter:description" content="Videos powered by WeWatch">
+		<meta name="twitter:image" content="https://wewatch.com/logo.png">
+		<meta name="robots" content="noindex">
+
+		<link rel="shortcut icon" href="./favicon.ico">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+	</head>
+
+	<body>
+		<div id="video-div"></div>
+    </body>
+
+    <script>
+
+            const urlParams = new URLSearchParams(window.location.search);
+            var video = urlParams.get('video');
+            if (video == null) {
+                window.location.href = "https://wewatch.com";
+            } else {
+                videoTag = document.createElement('video');
+                videoTag.src = "https://videos.wewatch.com/" + video
+                videoTag.autoplay = true;
+                $("#video-div").append(videoTag);
+            }
+
+	</script>
+
+</html>
+

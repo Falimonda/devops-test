@@ -1,0 +1,135 @@
+
+#wewatch-menu {
+	margin: 0;
+	overflow-y: hidden;
+	overflow-x: hidden;
+	background-image: url("../bg.jpg");
+}
+
+#main { 
+	margin: 0;
+	text-align: center; 
+	width: 100%; 
+	height: 100%;
+	display: flex; 
+	flex-direction: column; 
+	flex-wrap: nowrap; 
+	justify-content: space-between; 
+	align-items: center;
+	align-content: center;
+	overflow-y: hidden;
+	overflow-x: hidden;
+}
+
+#header {
+	width: 100%;
+	border: solid 2px #FFFFFF;
+	background-color: #000000;
+	padding: 2px;
+}
+
+#footer {
+	width: 100%;
+	border: solid 2px #FFFFFF;
+	background-color: #000000;
+	padding: 1px;
+}
+
+ul{
+	margin: 0 5px 0 5px;
+	padding: 0 15px 0 15px;
+	align-self: center;
+	text-align: left;
+	overflow-x: hidden;
+}
+
+#videos-list {
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: space-evenly;
+	align-items: center;
+	overflow-x: hidden;
+}
+
+.thumbnail-container {
+	margin: 2px;
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-top: 8px;
+	display:flex;
+	flex-wrap: nowrap; 
+	flex-direction: column; 
+	justify-content: center; 
+}
+
+.selected-thumbnail {
+	border-color: transparent;
+	box-shadow: 0 0 5px 2px #1188FF;
+	background: #3399FF;
+}
+
+.thumbnail-label {
+	align-self: center;
+	font-size: 1em;
+}
+
+.menu-item > ul {
+	margin-bottom: 20px;
+	display: inline;
+}
+.menu-item > p{
+	cursor: pointer;
+}
+.menu-item {
+	text-align: center;
+	border: solid 2px #ffffff;
+}
+.video-item {
+	text-align: center;
+	border: solid 2px #ffffff;
+}
+
+.thumbnail {
+	align-self: center;
+	width: 100%;
+	max-width: 600px;
+	margin: 1px;
+}
+
+#expanding-list-div {
+	align-self: center;
+}
+
+.visible {
+	display: block;
+}
+
+.expanding-list ul > li{
+	display: block;
+}
+.expanding-list ul {
+	align-self: center;
+	text-align: center;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #000;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
